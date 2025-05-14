@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Avançado de Conhecimentos Gerais</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #e9ecef;
+        }
+        .quiz-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 20px;
+            color: #495057;
+            margin-bottom: 25px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        button {
+            padding: 12px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        #feedback {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #score {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #343a40;
+        }
+        #progress {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Quiz Avançado de Conhecimentos Gerais</h1>
+        <div id="progress"></div>
+        <div id="question" class="question"></div>
+        <div id="options" class="options"></div>
+        <div id="feedback"></div>
+        <div id="score"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Qual partícula subatômica, descoberta em 2012 no CERN, é responsável por conferir massa às partículas?",
+                options: ["Quark Top", "Bóson de Higgs", "Nêutron", "Fóton"],
+                correct: "Bóson de Higgs"
+            },
+            {
+                question: "Quem foi o líder da Revolução Haitiana (1791-1804), que resultou na primeira república negra independente?",
+                options: ["Toussaint Louverture", "Jean-Jacques Dessalines", "Henri Christophe", "Alexandre Pétion"],
+                correct: "Toussaint Louverture"
+            },
+            {
+                question: "Qual é o nome do teorema que afirma que nenhum número inteiro positivo pode satisfazer a equação a^n + b^n = c^n para n > 2?",
+                options: ["Teorema de Fermat", "Teorema de Pitágoras", "Teorema de Euler", "Teorema de Gödel"],
+                correct: "Teorema de Fermat"
+            },
+            {
+                question: "Qual escritor russo escreveu o romance filosófico 'Os Irmãos Karamazov'?",
+                options: ["Leon Tolstói", "Fiódor Dostoiévski", "Anton Tchekhov", "Ivan Turguêniev"],
+                correct: "Fiódor Dostoiévski"
+            },
+            {
+                question: "Qual é o deserto mais seco do mundo, localizado na América do Sul?",
+                options: ["Deserto do Saara", "Deserto de Gobi", "Deserto do Atacama", "Deserto da Namíbia"],
+                correct: "Deserto do Atacama"
+            },
+            {
+                question: "Qual pintor renascentista é conhecido pela obra 'O Nascimento de Vênus'?",
+                options: ["Sandro Botticelli", "Leonardo da Vinci", "Michelangelo", "Rafael"],
+                correct: "Sandro Botticelli"
+            },
+            {
+                question: "Qual é a constante física que determina a força gravitacional entre dois corpos, simbolizada por G?",
+                options: ["Constante de Planck", "Constante de Avogadro", "Constante de Gravitação Universal", "Constante de Boltzmann"],
+                correct: "Constante de Gravitação Universal"
+            },
+            {
+                question: "Qual dinastia governou a China durante a construção da Grande Muralha, consolidada no século III a.C.?",
+                options: ["Dinastia Han", "Dinastia Qin", "Dinastia Ming", "Dinastia Tang"],
+                correct: "Dinastia Qin"
+            },
+            {
+                question: "Qual é o nome do protocolo de criptografia usado para proteger comunicações na internet, como HTTPS?",
+                options: ["RSA", "TLS", "AES", "SHA"],
+                correct: "TLS"
+            },
+            {
+                question: "Quem foi o filósofo grego que desenvolveu a teoria das ideias ou formas, descrita em 'A República'?",
+                options: ["Aristóteles", "Sócrates", "Platão", "Heráclito"],
+                correct: "Platão"
+            },
+            {
+                question: "Qual é o elemento químico mais abundante no universo?",
+                options: ["Oxigênio", "Hidrogênio", "Hélio", "Carbono"],
+                correct: "Hidrogênio"
+            },
+            {
+                question: "Qual tratado, assinado em 1648, encerrou a Guerra dos Trinta Anos na Europa?",
+                options: ["Tratado de Versalhes", "Tratado de Westfália", "Tratado de Tordesilhas", "Tratado de Utrecht"],
+                correct: "Tratado de Westfália"
+            },
+            {
+                question: "Qual compositor austríaco é conhecido por suas 41 sinfonias, incluindo a 'Sinfonia Júpiter'?",
+                options: ["Ludwig van Beethoven", "Wolfgang Amadeus Mozart", "Johann Sebastian Bach", "Franz Schubert"],
+                correct: "Wolfgang Amadeus Mozart"
+            },
+            {
+                question: "Qual é a capital da Mongólia?",
+                options: ["Ulaanbaatar", "Astana", "Tashkent", "Bishkek"],
+                correct: "Ulaanbaatar"
+            },
+            {
+                question: "Qual cientista propôs a teoria da deriva continental, precursora da tectônica de placas?",
+                options: ["Charles Darwin", "Alfred Wegener", "Marie Curie", "Gregor Mendel"],
+                correct: "Alfred Wegener"
+            },
+            {
+                question: "Qual é o nome do supercontinente que existiu há cerca de 300 milhões de anos, reunindo todos os continentes atuais?",
+                options: ["Gondwana", "Laurásia", "Pangeia", "Rodínia"],
+                correct: "Pangeia"
+            },
+            {
+                question: "Qual escritor argentino é autor do conto 'Ficciones', conhecido por sua literatura fantástica?",
+                options: ["Julio Cortázar", "Jorge Luis Borges", "Gabriel García Márquez", "Mario Vargas Llosa"],
+                correct: "Jorge Luis Borges"
+            },
+            {
+                question: "Qual é o nome do processo pelo qual as estrelas produzem energia através da fusão de hidrogênios em hélio?",
+                options: ["Fissão nuclear", "Fusão nuclear", "Radiação beta", "Decaimento alfa"],
+                correct: "Fusão nuclear"
+            },
+            {
+                question: "Qual império africano, conhecido por sua riqueza e comércio de ouro, floresceu no século XIV sob Mansa Musa?",
+                options: ["Império do Mali", "Império Songhai", "Reino do Zimbabwe", "Império Axum"],
+                correct: "Império do Mali"
+            },
+            {
+                question: "Qual é o nome do paradoxo que questiona por que não observamos civilizações extraterrestres, apesar da vastidão do universo?",
+                options: ["Paradoxo de Olbers", "Paradoxo de Fermi", "Paradoxo de Russell", "Paradoxo de Zeno"],
+                correct: "Paradoxo de Fermi"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function shuffleOptions(options) {
+            for (let i = options.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [options[i], options[j]] = [options[j], options[i]];
+            }
+            return options;
+        }
+
+        function loadQuestion() {
+            const questionElement = document.getElementById("question");
+            const optionsElement = document.getElementById("options");
+            const feedbackElement = document.getElementById("feedback");
+            const scoreElement = document.getElementById("score");
+            const progressElement = document.getElementById("progress");
+
+            progressElement.textContent = `Questão ${currentQuestion + 1} de ${quizData.length}`;
+            questionElement.textContent = quizData[currentQuestion].question;
+            optionsElement.innerHTML = "";
+            feedbackElement.textContent = "";
+            scoreElement.textContent = `Pontuação: ${score}/${quizData.length}`;
+
+            const shuffledOptions = shuffleOptions([...quizDataJorge Luis Borges[currentQuestion].options]);
+            shuffledOptions.forEach(option => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.addEventListener("click", () => checkAnswer(option));
+                optionsElement.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selected) {
+            const feedbackElement = document.getElementById("feedback");
+            const correctAnswer = quizData[currentQuestion].correct;
+            const buttons = document.querySelectorAll(".options button");
+
+            buttons.forEach(button => button.disabled = true);
+
+            if (selected === correctAnswer) {
+                feedbackElement.textContent = "Correto!";
+                feedbackElement.style.color = "green";
+                score++;
+            } else {
+                feedbackElement.textContent = `Errado! A resposta correta é: ${correctAnswer}`;
+                feedbackElement.style.color = "red";
+            }
+
+            document.getElementById("score").textContent = `Pontuação: ${score}/${quizData.length}`;
+            setTimeout(nextQuestion, 1500);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                const questionElement = document.getElementById("question");
+                const optionsElement = document.getElementById("options");
+                const feedbackElement = document.getElementById("feedback");
+                const progressElement = document.getElementById("progress");
+                questionElement.textContent = "Fim do Quiz!";
+                progressElement.textContent = "";
+                optionsElement.innerHTML = "";
+                feedbackElement.textContent = `Você acertou ${score} de ${quizData.length} perguntas!`;
+                feedbackElement.style.color = "blue";
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
